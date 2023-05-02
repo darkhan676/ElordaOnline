@@ -1,6 +1,6 @@
 from webbrowser import get
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,7 +10,7 @@ from django.db.models import F
 from rest_framework import permissions
 from rest_framework.pagination import PageNumberPagination
 from .serializers import TeacherSerializer, CategorySerializer, CourseSerializer, ChapterSerializer, StudentSerializer, StudentCourseEnrollSerializer,CourseRatingSerializer,TeacherDashboardSerializer,StudentFavoriteCourseSerializer,StudentAssignmentSerializer,StudentDashboardSerializer,NotificationSerializer,QuizSerializer,QuestionSerializer,CourseQuizSerializer,AttemptQuizSerializer,StudyMaterialSerializer
-
+from .certificates import create_certificate
 from . import models
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -417,7 +417,25 @@ def fetch_quiz_result(request,quiz_id,student_id):
         if attempt.right_ans == attempt.question.right_ans:
             total_correct_questions+=1
 
-    return JsonResponse ({'total_questions':total_questions,'total_attempted_questions':total_attempted_questions,'total_correct_questions':total_correct_questions})
+
+    student_name : str = student.full_name
+    course_name : str = quiz.title 
+    percentage = (total_correct_questions/total_questions) * 100
+    response = {'total_questions':total_questions,
+                'total_attempted_questions':total_attempted_questions,
+                'total_correct_questions':total_correct_questions} 
+    # Надо добавить в жсонку ссылку на сертификат, чтобы когда юзер переходил на нее его редиректило сходу на файл
+    if percentage >= 70:
+        data = {
+            "name": student_name,
+            "course": course_name,
+            "course_url": "None",
+            "date_of_start": "None",
+            "date_of_end": "None"
+        }
+        response["certificate"] = create_certificate(data)
+
+    return JsonResponse (response)
 
 
 class StudyMaterialList(generics.ListCreateAPIView):

@@ -13,17 +13,18 @@ import os
             name: ФИО,
             course: курс/тема,
             course_url:  ссылка на подтверждение (для QR кода),
-            date: дата 
+            date_of_start: дата начала,
+            date_of_end: дата окончания
         }
 """
 
 
-template_path = "C:\\Users\\artem\\code\\ElordaOnline\\lms_api\\template\\сертификат_заполненный.jpg"
+template_path = "C:\\Users\\artem\\code\\ElordaOnline\\lms_api\\main\\certificate_template.jpg"
 font_path = "C:\Windows\Fonts\ARIALBD.ttf"
 
 pdfmetrics.registerFont(TTFont('Arial-Bold', font_path))
 
-def create_certificate(data: dict):
+def create_certificate(data: dict) -> str:
 
     pdf = canvas.Canvas(f"{data['name']}.pdf", pagesize=landscape((1280, 986)))
     pdf.drawImage(template_path, 0, 0, width=1280, height=986)
@@ -50,20 +51,12 @@ def create_certificate(data: dict):
         img.save(f, format="PNG")
         qr_filename = f.name
 
-    pdf.drawImage(qr_filename, 220, 45, width=160, height=160)
+    try:
+        pdf.drawImage(qr_filename, 220, 45, width=160, height=160)
     
-    os.unlink(qr_filename)
+        os.unlink(qr_filename)
 
-    pdf.showPage()
-    pdf.save()
-
-
-user = {
-    "name": "Жангир Оспанов",
-    "course": "FastAPI",
-    "course_url": "https://fastapi.tiangolo.com/",
-    "date_of_start": "02.03.2022",
-    "date_of_end": "07.04.2022"
-}
-
-create_certificate(user)
+        pdf.save()
+        return f"{os.getcwd()}\\{data['name']}.pdf"
+    except Exception as e:
+        return None
