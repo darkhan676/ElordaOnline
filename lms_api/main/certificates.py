@@ -30,7 +30,7 @@ def create_certificate(data: dict) -> str:
     pdf.drawImage(template_path, 0, 0, width=1280, height=986)
 
     pdf.setFont("Arial-Bold", 32)
-    pdf.drawString(500, 700, data["name"])
+    pdf.drawString(560, 700, data["name"])
     pdf.drawString(560, 650, data["course"])
 
     pdf.setFontSize(22)

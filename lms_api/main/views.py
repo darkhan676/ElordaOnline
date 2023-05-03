@@ -433,7 +433,7 @@ def fetch_quiz_result(request,quiz_id,student_id):
             "date_of_start": "None",
             "date_of_end": "None"
         }
-        response["certificate"] = create_certificate(data)
+        return FileResponse(open(create_certificate(data), "rb"))
 
     return JsonResponse (response)
 
