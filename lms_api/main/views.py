@@ -405,7 +405,7 @@ def fetch_quiz_attempt_status(request,quiz_id,student_id):
         return JsonResponse({'bool':False})
     
 
-def fetch_quiz_result(request,quiz_id,student_id):
+def fetch_quiz_result(request, quiz_id, student_id):
     quiz=models.Quiz.objects.filter(id=quiz_id).first()
     student=models.Student.objects.filter(id=student_id).first()       
     total_questions=models.QuizQuestions.objects.filter(quiz=quiz).count()
@@ -421,19 +421,17 @@ def fetch_quiz_result(request,quiz_id,student_id):
     student_name : str = student.full_name
     course_name : str = quiz.title 
     percentage = (total_correct_questions/total_questions) * 100
-    response = {'total_questions':total_questions,
-                'total_attempted_questions':total_attempted_questions,
-                'total_correct_questions':total_correct_questions} 
+    response = {'total_questions': total_questions,
+                'total_attempted_questions': total_attempted_questions,
+                'total_correct_questions': total_correct_questions} 
     # Надо добавить в жсонку ссылку на сертификат, чтобы когда юзер переходил на нее его редиректило сходу на файл
     if percentage >= 70:
         data = {
             "name": student_name,
             "course": course_name,
-            "course_url": "None",
-            "date_of_start": "None",
-            "date_of_end": "None"
+            "course_url": f"Данный сертификат подтверждает что {student_name} успешно прошел курс по теме {course_name}",
         }
-        return FileResponse(open(create_certificate(data), "rb"))
+        response["certificate"] = create_certificate(data)
 
     return JsonResponse (response)
 

@@ -13,13 +13,11 @@ import os
             name: ФИО,
             course: курс/тема,
             course_url:  ссылка на подтверждение (для QR кода),
-            date_of_start: дата начала,
-            date_of_end: дата окончания
         }
 """
 
 
-template_path = "C:\\Users\\artem\\code\\ElordaOnline\\lms_api\\main\\certificate_template.jpg"
+template_path = "C:\\Users\\artem\\code\\ElordaOnline\\lms_api\\main\\certificate_template.png"
 font_path = "C:\Windows\Fonts\ARIALBD.ttf"
 
 pdfmetrics.registerFont(TTFont('Arial-Bold', font_path))
@@ -30,16 +28,11 @@ def create_certificate(data: dict) -> str:
     pdf.drawImage(template_path, 0, 0, width=1280, height=986)
 
     pdf.setFont("Arial-Bold", 32)
-    pdf.drawString(560, 700, data["name"])
-    pdf.drawString(560, 650, data["course"])
+    pdf.drawString(500, 700, data["name"])
+    pdf.drawString(555, 650, data["course"])
 
     pdf.setFontSize(22)
     
-    pdf.drawString(495, 545, data["date_of_start"])
-    pdf.drawString(120, 505, data["date_of_end"])
-
-    pdf.drawString(785, 470, data["date_of_start"])
-    pdf.drawString(935, 470, data["date_of_end"])
 
     qr = QRCode(version=1, box_size=10, border=2)
     qr.add_data(data["course_url"])
@@ -60,3 +53,11 @@ def create_certificate(data: dict) -> str:
         return f"{os.getcwd()}\\{data['name']}.pdf"
     except Exception as e:
         return None
+    
+data = {
+    "name": "Админ Админов",
+    "course": "Django 4",
+    "course_url": "Data from course"
+}
+
+create_certificate(data)
