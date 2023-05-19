@@ -431,9 +431,10 @@ def fetch_quiz_result(request, quiz_id, student_id):
             "course": course_name,
             "course_url": f"Данный сертификат подтверждает что {student_name} успешно прошел курс по теме {course_name}",
         }
+
         response["certificate"] = create_certificate(data)
 
-    return JsonResponse (response)
+    return JsonResponse(response)
 
 
 class StudyMaterialList(generics.ListCreateAPIView):
