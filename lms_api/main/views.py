@@ -437,6 +437,34 @@ def fetch_quiz_result(request, quiz_id, student_id):
     return JsonResponse(response)
 
 
+def return_certificate(request, quiz_id, student_id):
+    quiz=models.Quiz.objects.filter(id=quiz_id).first()
+    student=models.Student.objects.filter(id=student_id).first()       
+    total_questions=models.QuizQuestions.objects.filter(quiz=quiz).count()
+    total_attempted_questions=models.AttemptQuiz.objects.filter(quiz=quiz,student=student).values('student').count()
+    attempted_questions=models.AttemptQuiz.objects.filter(quiz=quiz,student=student)
+
+    total_correct_questions=0
+    for attempt in attempted_questions:
+        if attempt.right_ans == attempt.question.right_ans:
+            total_correct_questions+=1
+
+
+    student_name : str = student.full_name
+    course_name : str = quiz.title 
+    percentage = (total_correct_questions/total_questions) * 100
+    
+    # Надо добавить в жсонку ссылку на сертификат, чтобы когда юзер переходил на нее его редиректило сходу на файл
+    if percentage >= 70:
+        data = {
+            "name": student_name,
+            "course": course_name,
+            "course_url": f"Данный сертификат подтверждает что {student_name} успешно прошел курс по теме {course_name}",
+        }
+
+        return FileResponse(create_certificate(data))
+
+
 class StudyMaterialList(generics.ListCreateAPIView):
     serializer_class=StudyMaterialSerializer
 
