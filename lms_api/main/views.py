@@ -432,7 +432,7 @@ def fetch_quiz_result(request, quiz_id, student_id):
             "course_url": f"Данный сертификат подтверждает что {student_name} успешно прошел курс по теме {course_name}",
         }
 
-        response["certificate"] = create_certificate(data)
+        response["certificate"] = FileResponse(create_certificate(data))
 
     return JsonResponse(response)
 
