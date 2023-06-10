@@ -8,6 +8,7 @@ from qrcode import QRCode
 from random import randint
 from django.http import StreamingHttpResponse
 import os
+from lms_api.config import font_path
 
 """
         Формат входных параметров:
@@ -20,8 +21,8 @@ import os
 """
 
 
-template_path = os.path.join('certificate_template.png')
-font_path = "/usr/share/fonts/truetype/msttcorefonts/arialbd.ttf"
+template_path = os.path.abspath('main\\certificate_template.png')
+font_path = font_path
 
 pdfmetrics.registerFont(TTFont('Arial-Bold', font_path))
 
