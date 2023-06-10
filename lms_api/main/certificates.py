@@ -20,8 +20,8 @@ import os
 """
 
 
-template_path = "C:\\django-apps\\django_lms\\lms_api\\main\\certificate_template.png"
-font_path = "C:\\Windows\\Fonts\\ARIALBD.ttf"
+template_path = ".\certificate_template.png"
+font_path = "/usr/share/fonts/truetype/msttcorefonts/arialbd.ttf"
 
 pdfmetrics.registerFont(TTFont('Arial-Bold', font_path))
 
