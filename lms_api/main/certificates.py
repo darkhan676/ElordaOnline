@@ -55,7 +55,7 @@ def create_certificate(data: dict) -> str:
     
     
     qr = QRCode(version=1, box_size=10, border=2)
-    qr.add_data("https://stepik.com/")
+    qr.add_data("https://eao.kz/validation.php")
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
     with tempfile.NamedTemporaryFile(delete=False) as f:
