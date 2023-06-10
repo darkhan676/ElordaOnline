@@ -20,7 +20,7 @@ import os
 """
 
 
-template_path = ".\certificate_template.png"
+template_path = os.path.join('certificate_template.png')
 font_path = "/usr/share/fonts/truetype/msttcorefonts/arialbd.ttf"
 
 pdfmetrics.registerFont(TTFont('Arial-Bold', font_path))
